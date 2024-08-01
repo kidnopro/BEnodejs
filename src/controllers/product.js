@@ -75,3 +75,45 @@ export const related = async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
   }
 };
+
+export const searchProducts = async (req, res) => {
+  try {
+    const searchTerm = req.query.searchTerm;
+    const sort = req.query.sort; // Thêm tham số sort
+
+    if (!searchTerm) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Search term is required" });
+    }
+
+    console.log("searchTerm", searchTerm);
+
+    let sortOption = {};
+    if (sort === "asc") {
+      sortOption = { price: 1 }; // Sắp xếp giá tăng dần
+    } else if (sort === "desc") {
+      sortOption = { price: -1 }; // Sắp xếp giá giảm dần
+    }
+
+    const products = await Product.find({
+      name: new RegExp(searchTerm.trim(), "i"),
+    })
+      .populate("category")
+      .sort(sortOption); // Áp dụng sắp xếp
+
+    console.log("products", products);
+
+    if (products.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Không tìm thấy sản phẩm nào" });
+    }
+
+    return res.status(StatusCodes.OK).json(products);
+  } catch (error) {
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
+  }
+};
