@@ -42,7 +42,7 @@ export const signup = async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ messages });
   }
   const exitsUser = await User.findOne({ email });
-  if (exitsUser) {
+  if (exitsUser) { 
     return res
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: ["Email đã tồn tại !"] });

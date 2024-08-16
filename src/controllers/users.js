@@ -25,5 +25,3 @@ export const deleteUsers = async (req, res) => {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error });
   }
 };
-
-// export const updateUsers = async () => {};
